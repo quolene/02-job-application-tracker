@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folio — Job Application Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #f5f0e8;
+  --paper2: #ede8df;
+  --ink: #1c1917;
+  --ink2: #44403c;
+  --ink3: #a8a29e;
+  --border: #ddd8cf;
+  --white: #fdfaf5;
+  --accent: #c2714f;
+  --applied: #4a7c59;
+  --applied-bg: #eef4f0;
+  --talks: #b45309;
+  --talks-bg: #fef3e2;
+  --selected: #1d4ed8;
+  --selected-bg: #eff6ff;
+  --notselected: #9ca3af;
+  --notselected-bg: #f3f4f6;
+  --shadow: 0 1px 3px rgba(28,25,23,0.08), 0 4px 12px rgba(28,25,23,0.04);
+  --shadow-lg: 0 4px 16px rgba(28,25,23,0.12), 0 1px 4px rgba(28,25,23,0.06);
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+.header {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 20px 28px; display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 50;
+}
+.header-left { display: flex; flex-direction: column; gap: 2px; }
+.logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+.logo span { color: var(--accent); }
+.tagline { font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+.add-btn {
+  background: var(--ink); color: var(--white); border: none; border-radius: 4px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s;
+}
+.add-btn:hover { background: var(--accent); }
+
+.stats-bar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 14px 28px; display: flex; gap: 28px; align-items: center; overflow-x: auto;
+}
+.stat { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+.stat-label { font-size: 12px; color: var(--ink3); }
+.stat-num { font-size: 14px; font-weight: 500; color: var(--ink); }
+.stat-divider { width: 1px; height: 20px; background: var(--border); }
+
+.board {
+  padding: 24px 20px; display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; min-height: calc(100vh - 130px); overflow-x: auto;
+}
+.column { background: var(--paper2); border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 400px; }
+.col-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.col-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+.col-count { font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 2px 8px; color: var(--ink3); }
+.col-cards { padding: 12px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+.col-applied .col-title { color: var(--applied); }
+.col-talks .col-title { color: var(--talks); }
+.col-selected .col-title { color: var(--selected); }
+.col-notselected .col-title { color: var(--notselected); }
+
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; cursor: pointer; transition: box-shadow 0.2s, transform 0.15s;
+  box-shadow: var(--shadow); position: relative;
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+.card-company { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 2px; line-height: 1.2; }
+.card-role { font-size: 12px; color: var(--ink2); margin-bottom: 10px; }
+.card-meta { display: flex; flex-direction: column; gap: 4px; }
+.card-meta-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+.card-platform { display: inline-block; font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; margin-top: 8px; }
+.p-linkedin { background: #e8f0fb; color: #1d4ed8; }
+.p-naukri { background: #fff0e6; color: #c05621; }
+.p-internshala { background: #f0fdf4; color: #166534; }
+.p-company { background: #f5f3ff; color: #6d28d9; }
+.p-other { background: #f1f5f9; color: #475569; }
+.card-delete { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 14px; opacity: 0; transition: opacity 0.2s; padding: 2px 5px; }
+.card:hover .card-delete { opacity: 1; }
+.card-delete:hover { color: #ef4444; }
+
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 16px; gap: 8px; opacity: 0.5; }
+.empty-icon { font-size: 24px; }
+.empty-text { font-size: 12px; color: var(--ink3); text-align: center; line-height: 1.5; }
+
+.overlay { position: fixed; inset: 0; background: rgba(28,25,23,0.5); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
+.overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: 20px 20px 0 0; width: 100%; max-width: 560px; padding: 28px 24px 40px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1); }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 24px; }
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; margin-bottom: 24px; color: var(--ink); }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: 11px; font-weight: 500; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'DM Mono', monospace; }
+.form-input, .form-select, .form-textarea { background: var(--paper); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); transition: border-color 0.2s; width: 100%; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); }
+.form-textarea { resize: vertical; min-height: 72px; }
+.form-select { appearance: none; cursor: pointer; }
+.form-actions { display: flex; gap: 10px; margin-top: 24px; }
+.btn-save { flex: 1; background: var(--ink); color: var(--white); border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 13px; cursor: pointer; transition: background 0.2s; }
+.btn-save:hover { background: var(--accent); }
+.btn-cancel { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 13px 20px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink2); cursor: pointer; transition: border-color 0.2s; }
+.btn-cancel:hover { border-color: var(--ink); }
+
+.detail-field { margin-bottom: 16px; }
+.detail-label { font-size: 10px; font-weight: 500; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Mono', monospace; margin-bottom: 3px; }
+.detail-val { font-size: 14px; color: var(--ink); line-height: 1.5; }
+.detail-company { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; margin-bottom: 4px; }
+.detail-role { font-size: 15px; color: var(--ink2); margin-bottom: 20px; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.status-select-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.status-pill { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1.5px solid transparent; cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.status-pill.applied { background: var(--applied-bg); color: var(--applied); }
+.status-pill.talks { background: var(--talks-bg); color: var(--talks); }
+.status-pill.selected { background: var(--selected-bg); color: var(--selected); }
+.status-pill.notselected { background: var(--notselected-bg); color: var(--notselected); }
+.status-pill.active { border-color: currentColor; font-weight: 600; }
+
+@media (max-width: 700px) {
+  .board { grid-template-columns: 1fr; padding: 16px; gap: 12px; }
+  .column { min-height: auto; }
+  .stats-bar { gap: 16px; padding: 12px 16px; }
+  .header { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">fo<span>.</span>lio</div>
+    <div class="tagline">job application tracker</div>
+  </div>
+  <button class="add-btn" onclick="openAdd()">+ Add application</button>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-dot" style="background:var(--ink2)"></div>
+    <span class="stat-label">Total</span>
+    <span class="stat-num" id="statTotal">0</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-dot" style="background:var(--applied)"></div>
+    <span class="stat-label">Applied</span>
+    <span class="stat-num" id="statApplied">0</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-dot" style="background:var(--talks)"></div>
+    <span class="stat-label">In Talks</span>
+    <span class="stat-num" id="statTalks">0</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-dot" style="background:var(--selected)"></div>
+    <span class="stat-label">Selected</span>
+    <span class="stat-num" id="statSelected">0</span>
+  </div>
+</div>
+
+<div class="board">
+  <div class="column col-applied">
+    <div class="col-header">
+      <span class="col-title">Applied</span>
+      <span class="col-count" id="count-applied">0</span>
+    </div>
+    <div class="col-cards" id="col-applied"></div>
+  </div>
+  <div class="column col-talks">
+    <div class="col-header">
+      <span class="col-title">In Talks</span>
+      <span class="col-count" id="count-talks">0</span>
+    </div>
+    <div class="col-cards" id="col-talks"></div>
+  </div>
+  <div class="column col-selected">
+    <div class="col-header">
+      <span class="col-title">Selected</span>
+      <span class="col-count" id="count-selected">0</span>
+    </div>
+    <div class="col-cards" id="col-selected"></div>
+  </div>
+  <div class="column col-notselected">
+    <div class="col-header">
+      <span class="col-title">Not Selected</span>
+      <span class="col-count" id="count-notselected">0</span>
+    </div>
+    <div class="col-cards" id="col-notselected"></div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="overlay" id="addOverlay" onclick="closeOnBg(event,'addOverlay')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New application</div>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label class="form-label">Company *</label>
+        <input class="form-input" id="f-company" placeholder="e.g. Flipkart" />
+      </div>
+      <div class="form-group form-full">
+        <label class="form-label">Role *</label>
+        <input class="form-input" id="f-role" placeholder="e.g. Product Manager" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Platform</label>
+        <select class="form-select" id="f-platform">
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Naukri">Naukri</option>
+          <option value="Internshala">Internshala</option>
+          <option value="Company Portal">Company Portal</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="f-status">
+          <option value="applied">Applied</option>
+          <option value="talks">In Talks</option>
+          <option value="selected">Selected</option>
+          <option value="notselected">Not Selected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" id="f-location" placeholder="e.g. Bangalore" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Salary (LPA)</label>
+        <input class="form-input" id="f-salary" placeholder="e.g. 18–22" />
+      </div>
+      <div class="form-group form-full">
+        <label class="form-label">Contact person</label>
+        <input class="form-input" id="f-contact" placeholder="Recruiter name or email" />
+      </div>
+      <div class="form-group form-full">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="f-note" placeholder="Anything worth remembering..."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal('addOverlay')">Cancel</button>
+      <button class="btn-save" onclick="saveApplication()">Save application</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailOverlay" onclick="closeOnBg(event,'detailOverlay')">
+  <div class="modal" id="detailContent"></div>
+</div>
+
+<script>
+let apps = JSON.parse(localStorage.getItem('folio-apps') || '[]');
+
+function save() { localStorage.setItem('folio-apps', JSON.stringify(apps)); render(); }
+
+function platformClass(p) {
+  const map = { 'LinkedIn':'p-linkedin','Naukri':'p-naukri','Internshala':'p-internshala','Company Portal':'p-company' };
+  return map[p] || 'p-other';
+}
+
+function render() {
+  const cols = { applied:[], talks:[], selected:[], notselected:[] };
+  apps.forEach(a => { if (cols[a.status]) cols[a.status].push(a); });
+
+  Object.keys(cols).forEach(status => {
+    const el = document.getElementById('col-' + status);
+    document.getElementById('count-' + status).textContent = cols[status].length;
+    if (cols[status].length === 0) {
+      el.innerHTML = `<div class="empty-state"><div class="empty-icon">·</div><div class="empty-text">Nothing here yet</div></div>`;
+      return;
+    }
+    el.innerHTML = cols[status].map(a => `
+      <div class="card" onclick="openDetail('${a.id}')">
+        <button class="card-delete" onclick="deleteApp(event,'${a.id}')">×</button>
+        <div class="card-company">${a.company}</div>
+        <div class="card-role">${a.role}</div>
+        <div class="card-meta">
+          ${a.location ? `<div class="card-meta-row">📍 ${a.location}</div>` : ''}
+          ${a.salary ? `<div class="card-meta-row">₹ ${a.salary} LPA</div>` : ''}
+          ${a.date ? `<div class="card-meta-row">Applied ${new Date(a.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>` : ''}
+        </div>
+        <span class="card-platform ${platformClass(a.platform)}">${a.platform}</span>
+      </div>`).join('');
+  });
+
+  document.getElementById('statTotal').textContent = apps.length;
+  document.getElementById('statApplied').textContent = cols.applied.length;
+  document.getElementById('statTalks').textContent = cols.talks.length;
+  document.getElementById('statSelected').textContent = cols.selected.length;
+}
+
+function openAdd() {
+  ['company','role','location','salary','contact','note'].forEach(f => { const el = document.getElementById('f-'+f); if(el) el.value=''; });
+  document.getElementById('f-platform').value = 'LinkedIn';
+  document.getElementById('f-status').value = 'applied';
+  document.getElementById('addOverlay').classList.add('open');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeOnBg(e, id) { if (e.target.id === id) closeModal(id); }
+
+function saveApplication() {
+  const company = document.getElementById('f-company').value.trim();
+  const role = document.getElementById('f-role').value.trim();
+  if (!company || !role) { document.getElementById('f-company').style.borderColor='#ef4444'; return; }
+  apps.unshift({ id: Date.now().toString(), company, role,
+    platform: document.getElementById('f-platform').value,
+    status: document.getElementById('f-status').value,
+    location: document.getElementById('f-location').value.trim(),
+    salary: document.getElementById('f-salary').value.trim(),
+    contact: document.getElementById('f-contact').value.trim(),
+    note: document.getElementById('f-note').value.trim(),
+    date: new Date().toISOString()
+  });
+  save(); closeModal('addOverlay');
+}
+
+function openDetail(id) {
+  const a = apps.find(x => x.id === id);
+  if (!a) return;
+  const labels = { applied:'Applied', talks:'In Talks', selected:'Selected', notselected:'Not Selected' };
+  const pills = Object.keys(labels).map(s =>
+    `<button class="status-pill ${s} ${a.status===s?'active':''}" onclick="updateStatus('${id}','${s}')">${labels[s]}</button>`
+  ).join('');
+  document.getElementById('detailContent').innerHTML = `
+    <div class="modal-handle"></div>
+    <div class="detail-company">${a.company}</div>
+    <div class="detail-role">${a.role}</div>
+    <div class="detail-grid">
+      ${a.location?`<div class="detail-field"><div class="detail-label">Location</div><div class="detail-val">${a.location}</div></div>`:''}
+      ${a.salary?`<div class="detail-field"><div class="detail-label">Salary</div><div class="detail-val">₹${a.salary} LPA</div></div>`:''}
+      ${a.platform?`<div class="detail-field"><div class="detail-label">Platform</div><div class="detail-val">${a.platform}</div></div>`:''}
+      ${a.contact?`<div class="detail-field"><div class="detail-label">Contact</div><div class="detail-val">${a.contact}</div></div>`:''}
+    </div>
+    ${a.note?`<div class="detail-field"><div class="detail-label">Notes</div><div class="detail-val">${a.note}</div></div>`:''}
+    <div class="detail-field">
+      <div class="detail-label">Move to</div>
+      <div class="status-select-row">${pills}</div>
+    </div>
+    <div class="form-actions" style="margin-top:20px">
+      <button class="btn-cancel" onclick="closeModal('detailOverlay')" style="flex:1">Close</button>
+      <button class="btn-save" style="background:#ef4444;flex:0.4" onclick="deleteApp(event,'${id}',true)">Delete</button>
+    </div>`;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function updateStatus(id, status) {
+  const a = apps.find(x => x.id === id);
+  if (a) { a.status = status; save(); openDetail(id); }
+}
+
+function deleteApp(e, id, fromDetail) {
+  e.stopPropagation();
+  apps = apps.filter(x => x.id !== id);
+  save();
+  if (fromDetail) closeModal('detailOverlay');
+}
+
+render();
+</script>
+</body>
+</html>
