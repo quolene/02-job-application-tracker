@@ -1,12 +1,13 @@
-Job Application Tracker 📋
-Problem: I was applying to 20+ roles and losing track of where I stood. Spreadsheets felt clinical.
-My memory felt worse. I'd forget I'd already applied somewhere or worse, forget to follow up.
-MVP: Add a company, pick a status. 
-The tracker shows every application at a glance — Applied, Interviewing, Offer, Closed 
-with a clean card layout and a live count at the top.
-Why only this: I could have built email reminders, resume version linking, interview prep notes, salary benchmarking. I didn't. 
-The only thing that solved the actual problem was seeing everything in one place.
+# Job Application Tracker
 
-Live app: https://quolene.github.io/02-job-application-tracker
+Was applying to a lot of places and losing track. 
+Spreadsheets felt like overkill. Memory definitely wasnt enough.
 
-What I learned: A system you'll actually use beats a system that does everything
+Add a company, pick a status, done. One view for everything.
+
+Could have built reminders, resume linking, interview notes. 
+Didnt. Seeing it all in one place was the actual problem.
+
+Live: https://quolene.github.io/02-job-application-tracker
+
+Learned: a system you use beats a system that does everything.
