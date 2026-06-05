@@ -199,7 +199,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
   </div>
   <div class="column col-notselected">
     <div class="col-header">
-      <span class="col-title">Not Selected</span>
+      <span class="col-title">Closed</span>
       <span class="col-count" id="count-notselected">0</span>
     </div>
     <div class="col-cards" id="col-notselected"></div>
@@ -236,7 +236,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
           <option value="applied">Applied</option>
           <option value="talks">In Talks</option>
           <option value="selected">Selected</option>
-          <option value="notselected">Not Selected</option>
+          <option value="notselected">Closed</option>
         </select>
       </div>
       <div class="form-group">
@@ -245,7 +245,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
       </div>
       <div class="form-group">
         <label class="form-label">Salary (LPA)</label>
-        <input class="form-input" id="f-salary" placeholder="e.g. 18–22" />
+        <input class="form-input" id="f-salary" placeholder="e.g. 18-22" />
       </div>
       <div class="form-group form-full">
         <label class="form-label">Contact person</label>
@@ -338,7 +338,7 @@ function saveApplication() {
 function openDetail(id) {
   const a = apps.find(x => x.id === id);
   if (!a) return;
-  const labels = { applied:'Applied', talks:'In Talks', selected:'Selected', notselected:'Not Selected' };
+  const labels = { applied:'Applied', talks:'In Talks', selected:'Selected', notselected:'Closed' };
   const pills = Object.keys(labels).map(s =>
     `<button class="status-pill ${s} ${a.status===s?'active':''}" onclick="updateStatus('${id}','${s}')">${labels[s]}</button>`
   ).join('');
