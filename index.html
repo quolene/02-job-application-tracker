@@ -31,6 +31,7 @@
 
 body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
 
+/* ── HEADER ── */
 .header {
   background: var(--white); border-bottom: 1px solid var(--border);
   padding: 20px 28px; display: flex; justify-content: space-between; align-items: center;
@@ -40,6 +41,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
 .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
 .logo span { color: var(--accent); }
 .tagline { font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex; gap: 2px; background: var(--paper2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px;
+}
+.nav-tab {
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+  padding: 6px 14px; border-radius: 4px; border: none; cursor: pointer;
+  background: none; color: var(--ink3); transition: all 0.15s;
+}
+.nav-tab.active { background: var(--white); color: var(--ink); box-shadow: var(--shadow); }
+.nav-tab:hover:not(.active) { color: var(--ink2); }
+
 .add-btn {
   background: var(--ink); color: var(--white); border: none; border-radius: 4px;
   font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
@@ -47,6 +63,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
 }
 .add-btn:hover { background: var(--accent); }
 
+/* ── STATS BAR ── */
 .stats-bar {
   background: var(--white); border-bottom: 1px solid var(--border);
   padding: 14px 28px; display: flex; gap: 28px; align-items: center; overflow-x: auto;
@@ -57,6 +74,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
 .stat-num { font-size: 14px; font-weight: 500; color: var(--ink); }
 .stat-divider { width: 1px; height: 20px; background: var(--border); }
 
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── BOARD ── */
 .board {
   padding: 24px 20px; display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 16px; min-height: calc(100vh - 130px); overflow-x: auto;
@@ -96,6 +118,93 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
 .empty-icon { font-size: 24px; }
 .empty-text { font-size: 12px; color: var(--ink3); text-align: center; line-height: 1.5; }
 
+/* ── ANALYTICS ── */
+.analytics {
+  padding: 28px; max-width: 900px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+/* Two key numbers */
+.kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.kpi-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+  padding: 24px 28px; position: relative; overflow: hidden;
+}
+.kpi-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%; background: var(--accent);
+}
+.kpi-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: 'DM Mono', monospace; color: var(--ink3); margin-bottom: 8px;
+}
+.kpi-value {
+  font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 600;
+  line-height: 1; color: var(--ink); letter-spacing: -0.02em;
+}
+.kpi-value span { font-size: 28px; color: var(--ink3); }
+.kpi-sub { font-size: 12px; color: var(--ink3); margin-top: 6px; line-height: 1.4; }
+
+/* Chart card */
+.chart-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+  padding: 24px 28px;
+}
+.chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.chart-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--ink);
+}
+.chart-subtitle { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+.chart-legend { display: flex; gap: 14px; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* Bar chart */
+.bar-chart-wrap { position: relative; }
+.bar-chart-grid {
+  position: absolute; top: 0; left: 40px; right: 0; bottom: 24px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  pointer-events: none;
+}
+.grid-line {
+  width: 100%; height: 1px; background: var(--border);
+  display: flex; align-items: center;
+}
+.grid-label {
+  position: absolute; left: 0; transform: translateY(-50%);
+  font-size: 10px; color: var(--ink3); font-family: 'DM Mono', monospace;
+  width: 34px; text-align: right;
+}
+.bar-chart-inner {
+  padding-left: 48px; padding-bottom: 24px;
+  display: flex; align-items: flex-end; gap: 8px;
+  min-height: 200px;
+}
+.bar-group { display: flex; flex-direction: column; align-items: center; gap: 0; flex: 1; min-width: 0; }
+.bar-group-bars { display: flex; gap: 3px; align-items: flex-end; width: 100%; }
+.bar {
+  flex: 1; border-radius: 3px 3px 0 0; min-height: 2px;
+  transition: opacity 0.15s;
+  position: relative;
+}
+.bar:hover { opacity: 0.75; }
+.bar-label {
+  font-size: 10px; color: var(--ink3); font-family: 'DM Mono', monospace;
+  margin-top: 6px; text-align: center; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; width: 100%;
+}
+.bar-applied { background: var(--applied); }
+.bar-talks { background: var(--talks); }
+
+.no-data {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 160px; gap: 10px; color: var(--ink3);
+}
+.no-data-icon { font-family: 'Cormorant Garamond', serif; font-size: 32px; opacity: 0.3; }
+.no-data-text { font-size: 13px; }
+.no-data-hint { font-size: 11px; font-family: 'DM Mono', monospace; opacity: 0.6; }
+
+/* ── MODALS ── */
 .overlay { position: fixed; inset: 0; background: rgba(28,25,23,0.5); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
 .overlay.open { display: flex; }
 .modal { background: var(--white); border-radius: 20px 20px 0 0; width: 100%; max-width: 560px; padding: 28px 24px 40px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1); }
@@ -135,7 +244,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
   .board { grid-template-columns: 1fr; padding: 16px; gap: 12px; }
   .column { min-height: auto; }
   .stats-bar { gap: 16px; padding: 12px 16px; }
-  .header { padding: 16px; }
+  .header { padding: 16px; flex-wrap: wrap; gap: 10px; }
+  .kpi-row { grid-template-columns: 1fr; }
+  .analytics { padding: 16px; }
+  .chart-header { flex-direction: column; gap: 12px; }
 }
 </style>
 </head>
@@ -146,7 +258,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
     <div class="logo">fo<span>.</span>lio</div>
     <div class="tagline">job application tracker</div>
   </div>
-  <button class="add-btn" onclick="openAdd()">+ Add application</button>
+  <div class="header-right">
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-board" onclick="switchView('board')">Board</button>
+      <button class="nav-tab" id="tab-analytics" onclick="switchView('analytics')">Analytics</button>
+    </div>
+    <button class="add-btn" onclick="openAdd()">+ Add application</button>
+  </div>
 </div>
 
 <div class="stats-bar">
@@ -175,34 +293,73 @@ body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(
   </div>
 </div>
 
-<div class="board">
-  <div class="column col-applied">
-    <div class="col-header">
-      <span class="col-title">Applied</span>
-      <span class="col-count" id="count-applied">0</span>
+<!-- BOARD VIEW -->
+<div class="view active" id="view-board">
+  <div class="board">
+    <div class="column col-applied">
+      <div class="col-header">
+        <span class="col-title">Applied</span>
+        <span class="col-count" id="count-applied">0</span>
+      </div>
+      <div class="col-cards" id="col-applied"></div>
     </div>
-    <div class="col-cards" id="col-applied"></div>
+    <div class="column col-talks">
+      <div class="col-header">
+        <span class="col-title">In Talks</span>
+        <span class="col-count" id="count-talks">0</span>
+      </div>
+      <div class="col-cards" id="col-talks"></div>
+    </div>
+    <div class="column col-selected">
+      <div class="col-header">
+        <span class="col-title">Selected</span>
+        <span class="col-count" id="count-selected">0</span>
+      </div>
+      <div class="col-cards" id="col-selected"></div>
+    </div>
+    <div class="column col-notselected">
+      <div class="col-header">
+        <span class="col-title">Closed</span>
+        <span class="col-count" id="count-notselected">0</span>
+      </div>
+      <div class="col-cards" id="col-notselected"></div>
+    </div>
   </div>
-  <div class="column col-talks">
-    <div class="col-header">
-      <span class="col-title">In Talks</span>
-      <span class="col-count" id="count-talks">0</span>
+</div>
+
+<!-- ANALYTICS VIEW -->
+<div class="view" id="view-analytics">
+  <div class="analytics">
+
+    <!-- KPI row -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Applied → In Talks</div>
+        <div class="kpi-value" id="kpi-conversion">—</div>
+        <div class="kpi-sub" id="kpi-conversion-sub">Applications that moved to conversations</div>
+      </div>
+      <div class="kpi-card" style="--accent: var(--selected);">
+        <div class="kpi-label">Weekly run rate</div>
+        <div class="kpi-value" id="kpi-runrate">—</div>
+        <div class="kpi-sub" id="kpi-runrate-sub">Avg applications per active week</div>
+      </div>
     </div>
-    <div class="col-cards" id="col-talks"></div>
-  </div>
-  <div class="column col-selected">
-    <div class="col-header">
-      <span class="col-title">Selected</span>
-      <span class="col-count" id="count-selected">0</span>
+
+    <!-- Bar chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Applications per week</div>
+          <div class="chart-subtitle">All time · grouped by calendar week</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--applied)"></div>Applied</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--talks)"></div>In Talks</div>
+        </div>
+      </div>
+      <div class="bar-chart-wrap" id="barChartWrap"></div>
     </div>
-    <div class="col-cards" id="col-selected"></div>
-  </div>
-  <div class="column col-notselected">
-    <div class="col-header">
-      <span class="col-title">Closed</span>
-      <span class="col-count" id="count-notselected">0</span>
-    </div>
-    <div class="col-cards" id="col-notselected"></div>
+
   </div>
 </div>
 
@@ -278,6 +435,16 @@ function platformClass(p) {
   return map[p] || 'p-other';
 }
 
+/* ── VIEW SWITCHING ── */
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.getElementById('tab-' + v).classList.add('active');
+  if (v === 'analytics') renderAnalytics();
+}
+
+/* ── BOARD RENDER ── */
 function render() {
   const cols = { applied:[], talks:[], selected:[], notselected:[] };
   apps.forEach(a => { if (cols[a.status]) cols[a.status].push(a); });
@@ -309,6 +476,119 @@ function render() {
   document.getElementById('statSelected').textContent = cols.selected.length;
 }
 
+/* ── ANALYTICS RENDER ── */
+function getWeekKey(dateStr) {
+  const d = new Date(dateStr);
+  const day = d.getDay(); // 0=Sun
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Mon
+  const mon = new Date(d.setDate(diff));
+  return mon.toISOString().slice(0,10);
+}
+
+function formatWeekLabel(key) {
+  const d = new Date(key + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+}
+
+function renderAnalytics() {
+  const total = apps.length;
+  const talksCount = apps.filter(a => ['talks','selected'].includes(a.status)).length;
+
+  // Conversion rate
+  const convEl = document.getElementById('kpi-conversion');
+  const convSub = document.getElementById('kpi-conversion-sub');
+  if (total === 0) {
+    convEl.innerHTML = `—`;
+    convSub.textContent = 'Add applications to see conversion';
+  } else {
+    const pct = Math.round((talksCount / total) * 100);
+    convEl.innerHTML = `${pct}<span>%</span>`;
+    convSub.textContent = `${talksCount} of ${total} applications moved to conversations`;
+  }
+
+  // Weekly run rate
+  const rrEl = document.getElementById('kpi-runrate');
+  const rrSub = document.getElementById('kpi-runrate-sub');
+  const weekMap = {};
+  apps.forEach(a => {
+    if (!a.date) return;
+    const wk = getWeekKey(a.date);
+    weekMap[wk] = (weekMap[wk] || 0) + 1;
+  });
+  const weeks = Object.keys(weekMap);
+  if (weeks.length === 0) {
+    rrEl.innerHTML = `—`;
+    rrSub.textContent = 'Avg applications per active week';
+  } else {
+    const avg = (total / weeks.length).toFixed(1);
+    rrEl.innerHTML = `${avg}<span>/wk</span>`;
+    rrSub.textContent = `Across ${weeks.length} active week${weeks.length>1?'s':''}`;
+  }
+
+  // Bar chart: applied vs in-talks per week
+  const appsPerWeek = {}; // { weekKey: { applied, talks } }
+  apps.forEach(a => {
+    if (!a.date) return;
+    const wk = getWeekKey(a.date);
+    if (!appsPerWeek[wk]) appsPerWeek[wk] = { applied:0, talks:0 };
+    if (a.status === 'applied') appsPerWeek[wk].applied++;
+    else if (['talks','selected'].includes(a.status)) appsPerWeek[wk].talks++;
+    else appsPerWeek[wk].applied++; // closed/notselected still started as applied
+  });
+
+  const sortedWeeks = Object.keys(appsPerWeek).sort();
+  const wrap = document.getElementById('barChartWrap');
+
+  if (sortedWeeks.length === 0) {
+    wrap.innerHTML = `<div class="no-data">
+      <div class="no-data-icon">◌</div>
+      <div class="no-data-text">No data yet</div>
+      <div class="no-data-hint">Add your first application to get started</div>
+    </div>`;
+    return;
+  }
+
+  const allVals = sortedWeeks.flatMap(w => [appsPerWeek[w].applied, appsPerWeek[w].talks]);
+  const maxVal = Math.max(...allVals, 1);
+  const chartH = 180; // px height for bars
+
+  // Grid lines at 0, 25%, 50%, 75%, 100%
+  const gridSteps = 4;
+  const gridLines = Array.from({length: gridSteps + 1}, (_, i) => {
+    const v = Math.round((maxVal / gridSteps) * (gridSteps - i));
+    const pct = ((gridSteps - i) / gridSteps) * 100;
+    return { v, pct };
+  });
+
+  const gridHTML = gridLines.map(g => `
+    <div style="position:absolute; left:0; right:0; top:${100 - g.pct}%; height:1px; background:var(--border);">
+      <span style="position:absolute; right:calc(100% + 6px); top:50%; transform:translateY(-50%); font-size:10px; color:var(--ink3); font-family:'DM Mono',monospace; white-space:nowrap;">${g.v}</span>
+    </div>`).join('');
+
+  const barsHTML = sortedWeeks.map(wk => {
+    const d = appsPerWeek[wk];
+    const appliedH = Math.round((d.applied / maxVal) * chartH);
+    const talksH = Math.round((d.talks / maxVal) * chartH);
+    return `
+      <div class="bar-group" style="flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:0;">
+        <div style="display:flex; gap:3px; align-items:flex-end; width:100%; height:${chartH}px;">
+          <div class="bar bar-applied" title="Applied: ${d.applied}" style="height:${appliedH}px; flex:1;"></div>
+          <div class="bar bar-talks" title="In Talks: ${d.talks}" style="height:${talksH}px; flex:1;"></div>
+        </div>
+        <div class="bar-label">${formatWeekLabel(wk)}</div>
+      </div>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div style="position:relative; padding-left:40px; padding-bottom:28px;">
+      <div style="position:absolute; left:0; top:0; right:0; height:${chartH}px;">${gridHTML}</div>
+      <div style="display:flex; gap:6px; align-items:flex-end; height:${chartH}px; position:relative;">
+        ${barsHTML}
+      </div>
+    </div>`;
+}
+
+/* ── ADD / EDIT ── */
 function openAdd() {
   ['company','role','location','salary','contact','note'].forEach(f => { const el = document.getElementById('f-'+f); if(el) el.value=''; });
   document.getElementById('f-platform').value = 'LinkedIn';
