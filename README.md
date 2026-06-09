@@ -1,4 +1,4 @@
-# Job Application Tracker
+02-Folio
 
 Was applying to a lot of places and losing track. 
 Spreadsheets felt like overkill. Memory definitely wasnt enough.
