@@ -8,6 +8,6 @@ Add a company, pick a status, done. One view for everything.
 Could have built reminders, resume linking, interview notes. 
 Didnt. Seeing it all in one place was the actual problem.
 
-Live: https://quolene.github.io/02-job-application-tracker
+Live: https://quolene.github.io/02-job-application-tracker?v=2
 
 Learned: a system you use beats a system that does everything.
